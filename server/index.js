@@ -7,6 +7,8 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import dotenv from 'dotenv';
 
+import { readJSON, writeJSON } from './utils/fileHelpers.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -23,6 +25,7 @@ import loginRoutes from './routes/login.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// CORS Configuration
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
   ? process.env.ALLOWED_ORIGINS.split(',') 
   : ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:3000', 'http://127.0.0.1:5173'];
@@ -51,27 +54,7 @@ if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
-export const readJSON = (filePath) => {
-  try {
-    if (!fs.existsSync(filePath)) return null;
-    const data = fs.readFileSync(filePath, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error(`Error reading ${filePath}:`, error);
-    return null;
-  }
-};
-
-export const writeJSON = (filePath, data) => {
-  try {
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
-    return true;
-  } catch (error) {
-    console.error(`Error writing ${filePath}:`, error);
-    return false;
-  }
-};
-
+// Register routes
 app.use('/api/meals', mealsRoutes);
 app.use('/api/categories', categoriesRoutes);
 app.use('/api/extras', extrasRoutes);
@@ -80,30 +63,17 @@ app.use('/api/reviews', reviewsRoutes);
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/login', loginRoutes);
 
+// Test endpoint
 app.get('/api/test', (req, res) => {
   res.json({ 
     status: 'Server is running!', 
     timestamp: new Date().toISOString(),
     dataDir: DATA_DIR,
-    nodeEnv: process.env.NODE_ENV || 'development',
-    allowedOrigins: allowedOrigins,
-    adminConfigured: {
-      username: process.env.ADMIN_USERNAME ? true : false,
-      password: process.env.ADMIN_PASSWORD ? true : false
-    },
-    routes: {
-      meals: '/api/meals',
-      categories: '/api/categories',
-      extras: '/api/extras',
-      settings: '/api/settings',
-      reviews: '/api/reviews',
-      gallery: '/api/gallery',
-      login: '/api/login',
-      loginVerify: '/api/login/verify'
-    }
+    nodeEnv: process.env.NODE_ENV || 'development'
   });
 });
 
+// Debug settings endpoint
 app.get('/api/debug/settings', (req, res) => {
   const settingsPath = path.join(DATA_DIR, 'settings.json');
   try {
@@ -129,6 +99,7 @@ app.get('/api/debug/settings', (req, res) => {
   }
 });
 
+// Bulk import/export
 app.post('/api/restore', (req, res) => {
   const { meals, categories, extras, settings, reviews, gallery } = req.body;
   const DATA_FILES = {
@@ -182,6 +153,7 @@ app.get('/api/export', (req, res) => {
   res.json(data);
 });
 
+// WebSocket setup
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
@@ -271,10 +243,6 @@ io.on('connection', (socket) => {
     connectedClients.delete(socket.id);
   });
 });
-
-setInterval(() => {
-  // Keep alive - minimal logging
-}, 30000);
 
 httpServer.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
