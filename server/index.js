@@ -25,30 +25,9 @@ import loginRoutes from './routes/login.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// CORS Configuration - Allow all your Vercel URLs
-const allowedOrigins = process.env.ALLOWED_ORIGINS 
-  ? process.env.ALLOWED_ORIGINS.split(',') 
-  : [
-      'https://food-place-maison.vercel.app',
-      'https://food-place-maison-j7bj46yf4-joseph-andrew-funkeyes-projects.vercel.app',
-      'https://food-place-maison-git-master-joseph-andrew-funkeyes-projects.vercel.app',
-      'http://localhost:3000',
-      'http://localhost:5173',
-      'http://127.0.0.1:3000',
-      'http://127.0.0.1:5173'
-    ];
-
+// CORS Configuration - DISABLED FOR TESTING (allow all origins)
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      console.warn('CORS blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: '*',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
@@ -161,7 +140,7 @@ app.get('/api/export', (req, res) => {
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: allowedOrigins,
+    origin: '*',
     credentials: true,
     methods: ['GET', 'POST']
   }
