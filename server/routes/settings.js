@@ -9,9 +9,38 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Fix: Use correct path - go up one level from routes to server root
-const DATA_DIR = path.join(__dirname, '..', process.env.DATA_DIR || 'data');
+const DATA_DIR = path.join(__dirname, '..', 'data');
 const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
+
+// Default settings to use if file doesn't exist
+const DEFAULT_SETTINGS = {
+  restaurantName: 'FoodPlace Maison',
+  tagline: 'Fresh Meals. Made With Love.',
+  phone: '09019448954',
+  whatsapp: '09019448954',
+  address: 'No.15 Okwu Amadi Close, Rumuagholu, Port Harcourt, Rivers State, Nigeria',
+  preparationTime: 30,
+  status: 'Open',
+  holidayNotice: '',
+  businessHours: {
+    weekdays: '09:00 AM - 09:00 PM',
+    saturdays: '10:00 AM - 10:00 PM',
+    sundays: '12:00 PM - 08:00 PM'
+  },
+  socialMedia: {
+    instagram: 'foodplace_maison',
+    facebook: 'foodplace.maison',
+    twitter: 'foodplace_maison'
+  },
+  currencySymbol: '₦',
+  primaryColor: '#8A6B32',
+  secondaryColor: '#7A5533',
+  accentColor: '#6B7F3B',
+  showDailySpecials: true,
+  dailySpecialsBanner: '✨ Welcome to FoodPlace Maison! ✨',
+  logo: '',
+  favicon: ''
+};
 
 function ensureDataDir() {
   if (!fs.existsSync(DATA_DIR)) {
@@ -24,44 +53,33 @@ function readSettings() {
   ensureDataDir();
   try {
     if (!fs.existsSync(SETTINGS_FILE)) {
-      console.log('Settings file does not exist yet, creating default');
-      const defaultSettings = {
-        restaurantName: 'FoodPlace Maison',
-        tagline: 'Fresh Meals. Made With Love.',
-        phone: '09019448954',
-        whatsapp: '09019448954',
-        address: 'No.15 Okwu Amadi Close, Rumuagholu, Port Harcourt, Rivers State, Nigeria',
-        preparationTime: 30,
-        status: 'Open',
-        holidayNotice: '',
-        businessHours: {
-          weekdays: '09:00 AM - 09:00 PM',
-          saturdays: '10:00 AM - 10:00 PM',
-          sundays: '12:00 PM - 08:00 PM'
-        },
-        socialMedia: {
-          instagram: 'foodplace_maison',
-          facebook: 'foodplace.maison',
-          twitter: 'foodplace_maison'
-        },
-        currencySymbol: '₦',
-        primaryColor: '#8A6B32',
-        secondaryColor: '#7A5533',
-        accentColor: '#6B7F3B',
-        showDailySpecials: true,
-        dailySpecialsBanner: '✨ Welcome to FoodPlace Maison! ✨',
-        logo: '',
-        favicon: ''
-      };
-      writeSettings(defaultSettings);
-      return defaultSettings;
+      console.log('Settings file does not exist, creating default...');
+      // Create the file with default settings
+      fs.writeFileSync(SETTINGS_FILE, JSON.stringify(DEFAULT_SETTINGS, null, 2), 'utf8');
+      console.log('Default settings file created at:', SETTINGS_FILE);
+      return DEFAULT_SETTINGS;
     }
     const data = fs.readFileSync(SETTINGS_FILE, 'utf8');
     const parsed = JSON.parse(data);
+    
+    // If file exists but is empty, use defaults
+    if (!parsed || Object.keys(parsed).length === 0) {
+      console.log('Settings file is empty, using defaults');
+      fs.writeFileSync(SETTINGS_FILE, JSON.stringify(DEFAULT_SETTINGS, null, 2), 'utf8');
+      return DEFAULT_SETTINGS;
+    }
+    
     return parsed;
   } catch (error) {
     console.error('Error reading settings:', error);
-    return {};
+    // If there's an error reading, recreate the file with defaults
+    try {
+      fs.writeFileSync(SETTINGS_FILE, JSON.stringify(DEFAULT_SETTINGS, null, 2), 'utf8');
+      console.log('Recreated settings file with defaults after error');
+    } catch (writeError) {
+      console.error('Failed to recreate settings file:', writeError);
+    }
+    return DEFAULT_SETTINGS;
   }
 }
 
@@ -69,6 +87,7 @@ function writeSettings(settings) {
   try {
     ensureDataDir();
     fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2), 'utf8');
+    console.log('Settings saved successfully');
     return true;
   } catch (error) {
     console.error('Error writing settings:', error);
@@ -84,7 +103,7 @@ router.get('/', (req, res) => {
     res.json(settings);
   } catch (error) {
     console.error('Error in GET /api/settings:', error);
-    res.json({});
+    res.json(DEFAULT_SETTINGS);
   }
 });
 
