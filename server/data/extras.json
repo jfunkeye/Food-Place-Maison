@@ -1,0 +1,44 @@
+[
+  {
+    "id": "ext-1",
+    "name": "Egg",
+    "price": 500,
+    "enabled": true
+  },
+  {
+    "id": "ext-2",
+    "name": "Beef",
+    "price": 2000,
+    "enabled": true
+  },
+  {
+    "id": "ext-3",
+    "name": "Plantain",
+    "price": 800,
+    "enabled": true
+  },
+  {
+    "id": "ext-4",
+    "name": "Turkey",
+    "price": 6500,
+    "enabled": true
+  },
+  {
+    "id": "ext-5",
+    "name": "Chicken Lap",
+    "price": 4500,
+    "enabled": true
+  },
+  {
+    "id": "ext-6",
+    "name": "Noodles",
+    "price": 1200,
+    "enabled": true
+  },
+  {
+    "id": "ext-0loxowd",
+    "name": "Spicy Eggs",
+    "price": 1000,
+    "enabled": true
+  }
+]

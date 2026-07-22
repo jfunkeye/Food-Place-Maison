@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Arial Narrow", "Helvetica Neue", sans-serif;
+  --font-button: "Montserrat", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  
+  --color-primary: var(--primary-color, #8A6B32);
+  --color-secondary: var(--secondary-color, #7A5533);
+  --color-accent: var(--accent-color, #6B7F3B);
+  --color-bg-maison: #F7F3EC;
+  --color-card-maison: #FFFFFF;
+  --color-text-dark: #333333;
+  --color-success: #2E7D32;
+  --color-danger: #D32F2F;
+}
+
+/* Custom Base Styles */
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-sans);
+  background-color: var(--color-bg-maison);
+  color: var(--color-text-dark);
+}
+
+body {
+  overflow-x: hidden;
+  background-color: #F7F3EC;
+  color: #333333;
+}
+
+/* Custom Typography Helpers */
+.font-display {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.font-bebas {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.font-body {
+  font-family: var(--font-sans);
+}
+
+.font-montserrat {
+  font-family: var(--font-button);
+}
+
+.font-btn {
+  font-family: var(--font-button);
+}
+
+/* Image zoom & hover transitions */
+.hover-zoom img {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-zoom:hover img {
+  transform: scale(1.08);
+}
+
+/* Glassmorphism helpers */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(138, 107, 50, 0.1);
+}
+
+.glass-dark {
+  background: rgba(26, 26, 26, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Geometric card styling and transition */
+.food-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.food-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Luxury Shadow Design system */
+.shadow-luxury {
+  box-shadow: 0 10px 40px -10px rgba(138, 107, 50, 0.15);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F7F3EC;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8A6B32;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7A5533;
+}
+
+/* Soft gold glow for premium selected states */
+.premium-glow {
+  box-shadow: 0 0 20px rgba(138, 107, 50, 0.15);
+}
+
+.premium-border {
+  border-color: rgba(138, 107, 50, 0.2);
+}
+
+/* Custom Masonry / Grid Spacing */
+.masonry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-gap: 24px;
+}

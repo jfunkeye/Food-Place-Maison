@@ -1,0 +1,6 @@
+{
+  "name": "FoodPlace Maison",
+  "description": "Premium modern Nigerian restaurant website specializing in freshly prepared meals made with love.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

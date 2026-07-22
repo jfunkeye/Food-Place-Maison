@@ -1,0 +1,28 @@
+{
+  "restaurantName": "FoodPlace MAISON",
+  "tagline": "Fresh Meals. Made With Love.",
+  "phone": "09019448954",
+  "whatsapp": "09019448954",
+  "address": "No.15 Okwu Amadi Close, Rumuagholu, Port Harcourt, Rivers State, Nigeria",
+  "preparationTime": 30,
+  "status": "Open",
+  "holidayNotice": "We are currently closed for the holidays. See you soon!",
+  "businessHours": {
+    "weekdays": "09:00 AM - 09:00 PM",
+    "saturdays": "10:00 AM - 10:00 PM",
+    "sundays": "12:00 PM - 08:00 PM"
+  },
+  "socialMedia": {
+    "instagram": "foodplace_maison",
+    "facebook": "foodplace.maison",
+    "twitter": "foodplace_maison"
+  },
+  "currencySymbol": "₦",
+  "primaryColor": "#8A6B32",
+  "secondaryColor": "#7A5533",
+  "accentColor": "#6B7F3B",
+  "showDailySpecials": true,
+  "dailySpecialsBanner": "✨ FOODPLACE MAISON SPECIAL: Order any 2 Shawarmas and get a free chilled Zobo drink! Just ask via WhatsApp! ✨",
+  "logo": "",
+  "favicon": ""
+}

@@ -1,0 +1,22 @@
+{
+  "short_name": "FoodPlace",
+  "name": "FoodPlace Maison",
+  "description": "Premium modern Nigerian restaurant specializing in freshly prepared meals in Port Harcourt.",
+  "icons": [
+    {
+      "src": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=192&q=80",
+      "type": "image/jpeg",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=512&q=80",
+      "type": "image/jpeg",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#F7F3EC",
+  "theme_color": "#A1221C",
+  "display": "standalone",
+  "orientation": "portrait"
+}

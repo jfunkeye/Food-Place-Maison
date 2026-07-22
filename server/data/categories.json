@@ -1,0 +1,38 @@
+[
+  {
+    "id": "cat-1",
+    "name": "Appetizers",
+    "enabled": true,
+    "sortOrder": 1
+  },
+  {
+    "id": "cat-2",
+    "name": "Main Course",
+    "enabled": true,
+    "sortOrder": 2
+  },
+  {
+    "id": "cat-3",
+    "name": "Shawarma",
+    "enabled": true,
+    "sortOrder": 3
+  },
+  {
+    "id": "cat-4",
+    "name": "Drinks",
+    "enabled": true,
+    "sortOrder": 4
+  },
+  {
+    "id": "cat-vuxw4s0",
+    "name": "Deserts",
+    "enabled": true,
+    "sortOrder": 5
+  },
+  {
+    "id": "cat-0wj3g5y",
+    "name": "lol",
+    "enabled": true,
+    "sortOrder": 6
+  }
+]
