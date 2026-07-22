@@ -2,7 +2,8 @@ import { Meal, Category, Extra, Review, GalleryItem, Settings, CartItem } from '
 import { applyBrandColors } from '../utils/colors';
 import { api } from '../api/client';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+// Use Render URL directly
+const API_BASE = 'https://food-place-maison.onrender.com/api';
 const CART_KEY = 'foodplace_cart';
 
 async function apiGet<T>(endpoint: string): Promise<T> {
