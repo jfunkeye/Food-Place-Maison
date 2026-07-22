@@ -25,10 +25,18 @@ import loginRoutes from './routes/login.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// CORS Configuration
+// CORS Configuration - Allow all your Vercel URLs
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
   ? process.env.ALLOWED_ORIGINS.split(',') 
-  : [ 'https://food-place-maison.vercel.app', 'http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:3000', 'http://127.0.0.1:5173'];
+  : [
+      'https://food-place-maison.vercel.app',
+      'https://food-place-maison-j7bj46yf4-joseph-andrew-funkeyes-projects.vercel.app',
+      'https://food-place-maison-git-master-joseph-andrew-funkeyes-projects.vercel.app',
+      'http://localhost:3000',
+      'http://localhost:5173',
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:5173'
+    ];
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -37,6 +45,7 @@ app.use(cors({
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
+      console.warn('CORS blocked origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -54,7 +63,6 @@ if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
-// Register routes
 app.use('/api/meals', mealsRoutes);
 app.use('/api/categories', categoriesRoutes);
 app.use('/api/extras', extrasRoutes);
@@ -63,7 +71,6 @@ app.use('/api/reviews', reviewsRoutes);
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/login', loginRoutes);
 
-// Test endpoint
 app.get('/api/test', (req, res) => {
   res.json({ 
     status: 'Server is running!', 
@@ -73,7 +80,6 @@ app.get('/api/test', (req, res) => {
   });
 });
 
-// Debug settings endpoint
 app.get('/api/debug/settings', (req, res) => {
   const settingsPath = path.join(DATA_DIR, 'settings.json');
   try {
@@ -99,7 +105,6 @@ app.get('/api/debug/settings', (req, res) => {
   }
 });
 
-// Bulk import/export
 app.post('/api/restore', (req, res) => {
   const { meals, categories, extras, settings, reviews, gallery } = req.body;
   const DATA_FILES = {
@@ -153,7 +158,6 @@ app.get('/api/export', (req, res) => {
   res.json(data);
 });
 
-// WebSocket setup
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
