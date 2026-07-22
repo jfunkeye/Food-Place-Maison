@@ -1,7 +1,8 @@
 import { io, Socket } from 'socket.io-client';
 
-const API_BASE = import.meta.env.VITE_API_URL;
-const WS_URL = import.meta.env.VITE_WS_URL;
+// Use Render URL directly
+const API_BASE = 'https://food-place-maison.onrender.com/api';
+const WS_URL = 'https://food-place-maison.onrender.com';
 
 class ApiClient {
   private socket: Socket | null = null;
