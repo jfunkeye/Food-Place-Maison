@@ -1,4 +1,4 @@
-import { readJSON, writeJSON } from '../index.js';
+import { readJSON, writeJSON } from '../utils/fileHelpers.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
