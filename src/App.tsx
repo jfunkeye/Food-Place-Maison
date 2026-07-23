@@ -597,8 +597,9 @@ function AppContent() {
                   </div>
                 </div>
 
-                <div className="lg:col-span-5 relative hidden lg:block animate-fade-in py-6">
-                  <div className="w-[440px] h-[340px] relative mx-auto z-10">
+                {/* Hero Image - Now visible on all devices */}
+                <div className="lg:col-span-5 relative animate-fade-in py-6">
+                  <div className="w-full max-w-[440px] h-[200px] sm:h-[280px] lg:h-[340px] relative mx-auto z-10">
                     <div className="absolute inset-0 bg-primary rounded-[40px] rotate-3 opacity-15"></div>
                     <div className="absolute inset-0 overflow-hidden rounded-[32px] shadow-2xl shadow-primary/30 border border-white/10">
                       <img
