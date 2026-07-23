@@ -114,12 +114,12 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ gallery }) => {
               <div
                 ref={galleryScrollRef}
                 onScroll={handleGalleryScroll}
-                className="flex md:grid md:grid-cols-3 gap-6.5 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory scrollbar-none pb-4 -mx-4 px-4 md:mx-0 md:px-0"
+                className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory scrollbar-none pb-4 -mx-4 px-4 md:mx-0 md:px-0"
               >
                 {gallery.map((item, idx) => (
                   <div
                     key={item.id}
-                    className="min-w-[85vw] sm:min-w-[45vw] md:min-w-0 snap-center shrink-0 md:shrink"
+                    className="min-w-[280px] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 md:shrink w-full"
                   >
                     <div
                       onClick={() => openLightbox(idx)}
