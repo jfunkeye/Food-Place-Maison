@@ -133,8 +133,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }
               }}
             />
-            <div className="hidden sm:block">
-              <h1 className="font-bebas text-2xl tracking-tighter text-primary leading-none">
+            {/* Restaurant Name - Now visible on all devices */}
+            <div>
+              <h1 className="font-bebas text-lg sm:text-2xl tracking-tighter text-primary leading-none">
                 {settings.restaurantName === "FoodPlace Maison" ? (
                   <>
                     FoodPlace <span className="font-light text-secondary">Maison</span>
@@ -143,7 +144,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                   settings.restaurantName
                 )}
               </h1>
-              <p className="font-sans text-[9px] text-gray-400 font-medium uppercase tracking-widest mt-0.5">
+              {/* Tagline - visible only on larger screens */}
+              <p className="hidden sm:block font-sans text-[9px] text-gray-400 font-medium uppercase tracking-widest mt-0.5">
                 {settings.tagline}
               </p>
             </div>
