@@ -3,6 +3,9 @@ import { Star, MessageSquare, Quote, Heart, Send, CheckCircle } from 'lucide-rea
 import { Review } from '../../types';
 import { Reveal } from '../ui/Reveal';
 
+// Import star.png from assets
+import starAvatar from '../../../assets/star.png';
+
 interface ReviewsSectionProps {
   reviews: Review[];
   onAddReview: (review: Review) => void;
@@ -14,18 +17,13 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ reviews, onAddRe
   const [comment, setComment] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const randomAvatars = [
-    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
-    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
-    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80',
-    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80',
-  ];
+  // Use star.png as the default avatar
+  const defaultAvatar = starAvatar;
 
   const handleSubmitReview = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !comment.trim()) return;
 
-    const randomAvatar = randomAvatars[Math.floor(Math.random() * randomAvatars.length)];
     const todayStr = new Date().toISOString().split('T')[0];
 
     const newReview: Review = {
@@ -34,7 +32,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ reviews, onAddRe
       stars: rating,
       comment: comment.trim(),
       date: todayStr,
-      photo: randomAvatar,
+      photo: defaultAvatar,
     };
 
     onAddReview(newReview);
