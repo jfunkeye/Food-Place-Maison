@@ -447,12 +447,12 @@ function AppContent() {
 
       {currentView === 'admin' ? (
         <>
-          {showAdminLogin && (
-            <div className="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-              <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-gray-150 shadow-xl flex flex-col gap-6 animate-scale-in">
+          {showAdminLogin ? (
+            <div className="min-h-screen flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8 bg-[#F7F3EC]">
+              <div className="max-w-md w-full bg-white rounded-3xl p-6 sm:p-8 border border-gray-150 shadow-xl flex flex-col gap-6 animate-scale-in">
                 <div className="text-center">
                   <span className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto">🔒</span>
-                  <h2 className="font-bebas text-3xl tracking-wide text-gray-900 mt-4">Maison Administration</h2>
+                  <h2 className="font-bebas text-2xl sm:text-3xl tracking-wide text-gray-900 mt-4">Maison Administration</h2>
                   <p className="text-xs text-gray-400 mt-1">Please login using your manager credentials.</p>
                 </div>
 
@@ -498,9 +498,7 @@ function AppContent() {
                 </button>
               </div>
             </div>
-          )}
-
-          {isAdminLoggedIn && (
+          ) : isAdminLoggedIn ? (
             <AdminPanel
               meals={meals}
               setMeals={handleMealsChange}
@@ -518,7 +516,7 @@ function AppContent() {
               onResetToDefaults={handleResetToDefaults}
               showToast={showToast}
             />
-          )}
+          ) : null}
         </>
       ) : (
         <main className="flex-grow flex flex-col">
@@ -597,7 +595,6 @@ function AppContent() {
                   </div>
                 </div>
 
-                {/* Hero Image - Now visible on all devices */}
                 <div className="lg:col-span-5 relative animate-fade-in py-6">
                   <div className="w-full max-w-[440px] h-[200px] sm:h-[280px] lg:h-[340px] relative mx-auto z-10">
                     <div className="absolute inset-0 bg-primary rounded-[40px] rotate-3 opacity-15"></div>
