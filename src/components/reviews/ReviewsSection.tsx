@@ -3,7 +3,7 @@ import { Star, MessageSquare, Quote, Heart, Send, CheckCircle } from 'lucide-rea
 import { Review } from '../../types';
 import { Reveal } from '../ui/Reveal';
 
-// Import star.png from assets
+
 import starAvatar from '../../../assets/star.png';
 
 interface ReviewsSectionProps {
