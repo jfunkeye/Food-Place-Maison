@@ -42,7 +42,7 @@ import {
 import heroBg from '../assets/bg.jpg';
 import heroImage from '../assets/saw.jpg';
 
-const ADMIN_PATH =/queen;
+const ADMIN_PATH = '/queen';
 
 function AppContent() {
   const { showToast } = useToast();
