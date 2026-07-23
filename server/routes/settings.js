@@ -8,105 +8,72 @@ dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-const DATA_DIR = path.join(__dirname, '..', 'data');
+const DATA_DIR = path.join(__dirname, process.env.DATA_DIR || '../data');
 const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
 
-// Default settings to use if file doesn't exist
-const DEFAULT_SETTINGS = {
-  restaurantName: 'FoodPlace Maison',
-  tagline: 'Fresh Meals. Made With Love.',
-  phone: '09019448954',
-  whatsapp: '09019448954',
-  address: 'No.15 Okwu Amadi Close, Rumuagholu, Port Harcourt, Rivers State, Nigeria',
-  preparationTime: 30,
-  status: 'Open',
-  holidayNotice: '',
-  businessHours: {
-    weekdays: '09:00 AM - 09:00 PM',
-    saturdays: '10:00 AM - 10:00 PM',
-    sundays: '12:00 PM - 08:00 PM'
-  },
-  socialMedia: {
-    instagram: 'foodplace_maison',
-    facebook: 'foodplace.maison',
-    twitter: 'foodplace_maison'
-  },
-  currencySymbol: '₦',
-  primaryColor: '#8A6B32',
-  secondaryColor: '#7A5533',
-  accentColor: '#6B7F3B',
-  showDailySpecials: true,
-  dailySpecialsBanner: '✨ Welcome to FoodPlace Maison! ✨',
-  logo: '',
-  favicon: ''
-};
-
+// Ensure data directory exists
 function ensureDataDir() {
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
-    console.log('Created data directory:', DATA_DIR);
+    console.log('📁 Created data directory:', DATA_DIR);
   }
 }
 
+// Read settings from file
 function readSettings() {
   ensureDataDir();
   try {
     if (!fs.existsSync(SETTINGS_FILE)) {
-      console.log('Settings file does not exist, creating default...');
-      // Create the file with default settings
-      fs.writeFileSync(SETTINGS_FILE, JSON.stringify(DEFAULT_SETTINGS, null, 2), 'utf8');
-      console.log('Default settings file created at:', SETTINGS_FILE);
-      return DEFAULT_SETTINGS;
+      console.log('⚠️ Settings file does not exist yet');
+      return {};
     }
     const data = fs.readFileSync(SETTINGS_FILE, 'utf8');
-    const parsed = JSON.parse(data);
-    
-    // If file exists but is empty, use defaults
-    if (!parsed || Object.keys(parsed).length === 0) {
-      console.log('Settings file is empty, using defaults');
-      fs.writeFileSync(SETTINGS_FILE, JSON.stringify(DEFAULT_SETTINGS, null, 2), 'utf8');
-      return DEFAULT_SETTINGS;
-    }
-    
-    return parsed;
+    return JSON.parse(data);
   } catch (error) {
-    console.error('Error reading settings:', error);
-    // If there's an error reading, recreate the file with defaults
-    try {
-      fs.writeFileSync(SETTINGS_FILE, JSON.stringify(DEFAULT_SETTINGS, null, 2), 'utf8');
-      console.log('Recreated settings file with defaults after error');
-    } catch (writeError) {
-      console.error('Failed to recreate settings file:', writeError);
-    }
-    return DEFAULT_SETTINGS;
+    console.error('❌ Error reading settings:', error);
+    return {};
   }
 }
 
+// Write settings to file with verification
 function writeSettings(settings) {
   try {
     ensureDataDir();
+    
+    console.log('💾 Writing settings to disk...');
+    console.log('📦 Settings data:', JSON.stringify(settings, null, 2));
+    
+    // Write directly to file
     fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2), 'utf8');
-    console.log('Settings saved successfully');
+    
+    // Verify the file was written correctly by reading it back
+    const verifyData = fs.readFileSync(SETTINGS_FILE, 'utf8');
+    JSON.parse(verifyData);
+    
+    console.log('✅ Settings saved successfully to:', SETTINGS_FILE);
     return true;
   } catch (error) {
-    console.error('Error writing settings:', error);
+    console.error('❌ Error writing settings:', error);
     return false;
   }
 }
 
 const router = express.Router();
 
+// GET all settings
 router.get('/', (req, res) => {
+  console.log('📡 GET /api/settings');
   try {
     const settings = readSettings();
+    console.log('✅ Returning settings');
     res.json(settings);
   } catch (error) {
-    console.error('Error in GET /api/settings:', error);
-    res.json(DEFAULT_SETTINGS);
+    console.error('❌ Error in GET /api/settings:', error);
+    res.status(500).json({ error: 'Failed to read settings' });
   }
 });
 
+// GET single setting
 router.get('/:id', (req, res) => {
   try {
     const settings = readSettings();
@@ -116,22 +83,35 @@ router.get('/:id', (req, res) => {
       res.status(404).json({ error: 'Setting not found' });
     }
   } catch (error) {
-    console.error('Error in GET /api/settings/:id:', error);
+    console.error('❌ Error in GET /api/settings/:id:', error);
     res.status(500).json({ error: 'Failed to read setting' });
   }
 });
 
+// PUT - update entire settings object
 router.put('/', (req, res) => {
+  console.log('📝 ========================================');
+  console.log('📝 Received settings update request');
+  console.log('📝 Request body:', JSON.stringify(req.body, null, 2));
+  console.log('📝 ========================================');
+  
   try {
     if (!req.body || typeof req.body !== 'object') {
+      console.error('❌ Invalid request body - expected object');
       return res.status(400).json({ error: 'Invalid settings data - expected object' });
     }
     
+    // Write directly to disk
     const success = writeSettings(req.body);
     
     if (success) {
+      // Read back to verify
       const verifiedSettings = readSettings();
+      console.log('✅ Settings saved and verified');
+      console.log('📝 Final settings on disk:', JSON.stringify(verifiedSettings, null, 2));
+      console.log('📝 ========================================');
       
+      // Broadcast to ALL clients via WebSocket
       const io = req.app.get('io');
       if (io) {
         io.emit('data-updated', { 
@@ -139,6 +119,9 @@ router.put('/', (req, res) => {
           data: verifiedSettings,
           timestamp: Date.now()
         });
+        console.log('📡 Settings broadcasted to all connected clients');
+      } else {
+        console.warn('⚠️ WebSocket instance not found in app');
       }
       
       res.json({ 
@@ -147,14 +130,18 @@ router.put('/', (req, res) => {
         settings: verifiedSettings 
       });
     } else {
+      console.error('❌ Failed to save settings - writeSettings returned false');
+      console.log('📝 ========================================');
       res.status(500).json({ error: 'Failed to save settings to disk' });
     }
   } catch (error) {
-    console.error('Error in PUT /api/settings:', error);
+    console.error('❌ Error in PUT /api/settings:', error);
+    console.log('📝 ========================================');
     res.status(500).json({ error: 'Server error: ' + error.message });
   }
 });
 
+// PUT - update specific setting by id
 router.put('/:id', (req, res) => {
   try {
     const settings = readSettings();
@@ -165,6 +152,7 @@ router.put('/:id', (req, res) => {
     settings[req.params.id] = req.body.value !== undefined ? req.body.value : req.body;
     
     if (writeSettings(settings)) {
+      // Broadcast to ALL clients via WebSocket
       const io = req.app.get('io');
       if (io) {
         io.emit('data-updated', { 
@@ -172,17 +160,19 @@ router.put('/:id', (req, res) => {
           data: settings,
           timestamp: Date.now()
         });
+        console.log('📡 Settings broadcasted to all connected clients');
       }
       res.json({ success: true, message: 'Setting updated' });
     } else {
       res.status(500).json({ error: 'Failed to update setting' });
     }
   } catch (error) {
-    console.error('Error in PUT /api/settings/:id:', error);
+    console.error('❌ Error in PUT /api/settings/:id:', error);
     res.status(500).json({ error: 'Server error: ' + error.message });
   }
 });
 
+// DELETE - reset to defaults (remove the setting)
 router.delete('/:id', (req, res) => {
   try {
     const settings = readSettings();
@@ -193,6 +183,7 @@ router.delete('/:id', (req, res) => {
     delete settings[req.params.id];
     
     if (writeSettings(settings)) {
+      // Broadcast to ALL clients via WebSocket
       const io = req.app.get('io');
       if (io) {
         io.emit('data-updated', { 
@@ -200,13 +191,14 @@ router.delete('/:id', (req, res) => {
           data: settings,
           timestamp: Date.now()
         });
+        console.log('📡 Settings broadcasted to all connected clients');
       }
       res.json({ success: true, message: 'Setting deleted' });
     } else {
       res.status(500).json({ error: 'Failed to delete setting' });
     }
   } catch (error) {
-    console.error('Error in DELETE /api/settings/:id:', error);
+    console.error('❌ Error in DELETE /api/settings/:id:', error);
     res.status(500).json({ error: 'Server error: ' + error.message });
   }
 });
